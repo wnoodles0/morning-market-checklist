@@ -16,7 +16,9 @@ const CHECKLIST_UL = document.getElementById('checklist');
 const SEARCH_INPUT = document.getElementById('search-input');
 const MARK_ALL_BTN = document.getElementById('mark-all-btn');
 const RESET_ALL_BTN = document.getElementById('reset-all-btn');
+const COPY_BTN = document.getElementById('copy-btn');
 const PROGRESS_TEXT = document.getElementById('progress-text');
+const TOAST = document.getElementById('toast');
 
 let checklistItems = []; // Array to hold all list item elements
 
@@ -174,6 +176,44 @@ function setAllChecks(checkState) {
 }
 
 /**
+ * Shows a toast notification with the given message.
+ * @param {string} message - The message to display.
+ * @param {number} duration - Duration in milliseconds (default: 2000).
+ */
+function showToast(message, duration = 2000) {
+    TOAST.textContent = message;
+    TOAST.classList.add('show');
+    
+    setTimeout(() => {
+        TOAST.classList.remove('show');
+    }, duration);
+}
+
+/**
+ * Copies all checked items to clipboard as a formatted list.
+ */
+function copyCheckedItems() {
+    const checkedItems = checklistItems
+        .filter(li => li.querySelector('input[type="checkbox"]').checked)
+        .map(li => li.querySelector('input[type="checkbox"]').dataset.itemName);
+    
+    if (checkedItems.length === 0) {
+        showToast('ยังไม่ได้ติ๊กรายการ');
+        return;
+    }
+    
+    const textToCopy = checkedItems.map(item => `- ${item}`).join('\n');
+    
+    // Use Clipboard API
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        showToast('คัดลอกแล้ว');
+    }).catch(err => {
+        console.error('Failed to copy to clipboard:', err);
+        showToast('คัดลอกไม่สำเร็จ');
+    });
+}
+
+/**
  * Initializes the application.
  */
 function initChecklist() {
@@ -183,6 +223,7 @@ function initChecklist() {
     SEARCH_INPUT.addEventListener('input', filterList);
     MARK_ALL_BTN.addEventListener('click', () => setAllChecks(true));
     RESET_ALL_BTN.addEventListener('click', () => setAllChecks(false));
+    COPY_BTN.addEventListener('click', copyCheckedItems);
 }
 
 // Run the initialization when the DOM is fully loaded
@@ -191,7 +232,7 @@ document.addEventListener('DOMContentLoaded', initChecklist);
 // Optional: Service Worker for Offline capability (Minimal and Safe)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(registration => {
+        navigator.serviceWorker.register('sw.js').then(registration => {
             console.log('SW registered: ', registration);
         }).catch(registrationError => {
             console.log('SW registration failed: ', registrationError);

@@ -25,8 +25,11 @@
         </div>
         <div class="controls-container">
             <input type="search" id="search-input" placeholder="ค้นหารายการ..." class="search-input">
-            <button id="mark-all-btn" class="control-btn primary-btn">ติ๊กทั้งหมด</button>
-            <button id="reset-all-btn" class="control-btn secondary-btn">ล้างทั้งหมด</button>
+            <div class="button-group">
+                <button id="mark-all-btn" class="control-btn primary-btn">ติ๊กทั้งหมด</button>
+                <button id="reset-all-btn" class="control-btn secondary-btn">ล้างทั้งหมด</button>
+                <button id="copy-btn" class="control-btn copy-btn">คัดลอกรายการที่ติ๊ก</button>
+            </div>
         </div>
     </header>
 
@@ -35,6 +38,8 @@
             <!-- รายการจะถูกสร้างโดย JavaScript -->
         </ul>
     </main>
+
+    <div id="toast" class="toast"></div>
 
     <script src="script.js"></script>
 </body>

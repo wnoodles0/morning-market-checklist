@@ -66,6 +66,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    align-items: center;
     max-width: 1000px;
     margin: 0 auto;
     padding: 0 15px 10px;
@@ -117,6 +118,21 @@ body {
 
 .secondary-btn:hover {
     background-color: #5a6268;
+}
+
+.copy-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.copy-btn:hover {
+    background-color: #218838;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 /* Checklist */
@@ -193,6 +209,31 @@ body {
     text-decoration: line-through;
 }
 
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+    z-index: 2000;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
 /* Desktop/Tablet adjustments */
 @media (min-width: 600px) {
     .title {
@@ -201,10 +242,18 @@ body {
 
     .controls-container {
         flex-wrap: nowrap;
+        align-items: center;
     }
 
     .search-input {
+        flex-grow: 1;
         max-width: 300px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: nowrap;
     }
 
     .checklist-item {
