@@ -1,0 +1,213 @@
+:root {
+    --primary-color: #007bff; /* Subtle Blue Accent */
+    --primary-hover: #0056b3;
+    --background-color: #f8f9fa; /* Light Gray/White Background */
+    --text-color: #212529; /* Dark Text */
+    --border-color: #dee2e6;
+    --font-family: 'Sarabun', sans-serif;
+    --header-height: 60px;
+    --control-height: 100px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding-top: calc(var(--header-height) + var(--control-height)); /* Space for sticky header */
+}
+
+/* Typography and Hierarchy */
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+/* Sticky Header */
+.sticky-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 15px;
+    height: var(--header-height);
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Controls */
+.controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 15px 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.search-input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    min-width: 150px;
+}
+
+.search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.control-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-family);
+    transition: background-color 0.3s, opacity 0.3s;
+    white-space: nowrap;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.secondary-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.secondary-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Checklist */
+.checklist-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+#checklist {
+    list-style: none;
+    padding: 0;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.checklist-item:last-child {
+    border-bottom: none;
+}
+
+.checklist-item:hover {
+    background-color: #f1f3f5;
+}
+
+.checklist-item.hidden {
+    display: none;
+}
+
+.checklist-item input[type="checkbox"] {
+    /* Custom Checkbox Styling */
+    appearance: none;
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 15px;
+    position: relative;
+    transition: background-color 0.3s, border-color 0.3s;
+    flex-shrink: 0;
+}
+
+.checklist-item input[type="checkbox"]:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checklist-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checklist-item-label {
+    flex-grow: 1;
+    font-size: 1.1rem;
+    transition: opacity 0.3s, text-decoration 0.3s;
+}
+
+.checklist-item input[type="checkbox"]:checked + .checklist-item-label {
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+/* Desktop/Tablet adjustments */
+@media (min-width: 600px) {
+    .title {
+        font-size: 1.8rem;
+    }
+
+    .controls-container {
+        flex-wrap: nowrap;
+    }
+
+    .search-input {
+        max-width: 300px;
+    }
+
+    .checklist-item {
+        padding: 15px 10px;
+    }
+}
