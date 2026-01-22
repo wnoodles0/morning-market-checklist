@@ -7,11 +7,11 @@
     --font-family: 'Sarabun', sans-serif;
     --header-height: 60px;
     --control-height: 100px;
-    --header-h: 0px; /* Dynamic header height (set by JS) */
+    --top-offset: 0px; /* Dynamic top bar height (set by JS) */
 }
 
 html {
-    scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+    scroll-padding-top: calc(var(--top-offset) + env(safe-area-inset-top, 0px));
 }
 
 * {
@@ -25,7 +25,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
-    padding-top: 0; /* Will be set dynamically by JS */
+    padding-top: 0;
 }
 
 /* Typography and Hierarchy */
@@ -47,6 +47,7 @@ body {
     z-index: 1000;
     padding: 10px 0;
     padding-top: max(10px, env(safe-area-inset-top, 10px));
+    /* No bottom padding here - let it be measured by JS */
 }
 
 .header-content {
@@ -144,9 +145,10 @@ body {
 /* Checklist */
 .checklist-container {
     max-width: 1000px;
-    margin: 20px auto;
+    margin: 0 auto;
     padding: 0 15px;
-    padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+    padding-top: calc(var(--top-offset) + env(safe-area-inset-top, 0px) + 12px);
+    margin-top: 0;
 }
 
 #checklist {

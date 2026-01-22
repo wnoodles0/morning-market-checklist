@@ -214,16 +214,14 @@ function copyCheckedItems() {
 }
 
 /**
- * Updates the CSS variable for header height dynamically.
- * This ensures the content starts below the sticky header on all screen sizes.
+ * Updates the CSS variable for top bar offset dynamically.
+ * This ensures the list starts below the entire top bar (header + controls) on all screen sizes.
  */
-function updateHeaderHeight() {
-    const stickyHeader = document.querySelector('.sticky-header');
-    if (stickyHeader) {
-        const headerHeight = stickyHeader.offsetHeight;
-        document.documentElement.style.setProperty('--header-h', headerHeight + 'px');
-        // Also update body padding-top to ensure content doesn't overlap
-        document.body.style.paddingTop = headerHeight + 'px';
+function updateTopBarOffset() {
+    const topBar = document.getElementById('topBar');
+    if (topBar) {
+        const topBarHeight = topBar.offsetHeight;
+        document.documentElement.style.setProperty('--top-offset', topBarHeight + 'px');
     }
 }
 
@@ -233,8 +231,8 @@ function updateHeaderHeight() {
 function initChecklist() {
     renderChecklist();
     
-    // Calculate header height on load
-    updateHeaderHeight();
+    // Calculate top bar offset on load
+    updateTopBarOffset();
 
     // Event listeners for controls
     SEARCH_INPUT.addEventListener('input', filterList);
@@ -242,19 +240,19 @@ function initChecklist() {
     RESET_ALL_BTN.addEventListener('click', () => setAllChecks(false));
     COPY_BTN.addEventListener('click', copyCheckedItems);
     
-    // Recalculate header height on window resize and orientation change
-    window.addEventListener('resize', updateHeaderHeight);
+    // Recalculate top bar offset on window resize and orientation change
+    window.addEventListener('resize', updateTopBarOffset);
     window.addEventListener('orientationchange', () => {
         // Delay slightly to allow layout to settle
-        setTimeout(updateHeaderHeight, 100);
+        setTimeout(updateTopBarOffset, 100);
     });
 }
 
 // Run the initialization when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     initChecklist();
-    // Ensure header height is calculated after a brief delay to account for font loading
-    setTimeout(updateHeaderHeight, 500);
+    // Ensure top bar offset is calculated after a brief delay to account for font loading
+    setTimeout(updateTopBarOffset, 150);
 });
 
 // Optional: Service Worker for Offline capability (Minimal and Safe)
