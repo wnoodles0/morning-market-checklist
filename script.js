@@ -214,20 +214,48 @@ function copyCheckedItems() {
 }
 
 /**
+ * Updates the CSS variable for header height dynamically.
+ * This ensures the content starts below the sticky header on all screen sizes.
+ */
+function updateHeaderHeight() {
+    const stickyHeader = document.querySelector('.sticky-header');
+    if (stickyHeader) {
+        const headerHeight = stickyHeader.offsetHeight;
+        document.documentElement.style.setProperty('--header-h', headerHeight + 'px');
+        // Also update body padding-top to ensure content doesn't overlap
+        document.body.style.paddingTop = headerHeight + 'px';
+    }
+}
+
+/**
  * Initializes the application.
  */
 function initChecklist() {
     renderChecklist();
+    
+    // Calculate header height on load
+    updateHeaderHeight();
 
     // Event listeners for controls
     SEARCH_INPUT.addEventListener('input', filterList);
     MARK_ALL_BTN.addEventListener('click', () => setAllChecks(true));
     RESET_ALL_BTN.addEventListener('click', () => setAllChecks(false));
     COPY_BTN.addEventListener('click', copyCheckedItems);
+    
+    // Recalculate header height on window resize and orientation change
+    window.addEventListener('resize', updateHeaderHeight);
+    window.addEventListener('orientationchange', () => {
+        // Delay slightly to allow layout to settle
+        setTimeout(updateHeaderHeight, 100);
+    });
 }
 
 // Run the initialization when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initChecklist);
+document.addEventListener('DOMContentLoaded', () => {
+    initChecklist();
+    // Ensure header height is calculated after a brief delay to account for font loading
+    setTimeout(updateHeaderHeight, 500);
+});
 
 // Optional: Service Worker for Offline capability (Minimal and Safe)
 if ('serviceWorker' in navigator) {

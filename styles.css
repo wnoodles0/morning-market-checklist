@@ -7,6 +7,11 @@
     --font-family: 'Sarabun', sans-serif;
     --header-height: 60px;
     --control-height: 100px;
+    --header-h: 0px; /* Dynamic header height (set by JS) */
+}
+
+html {
+    scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
 }
 
 * {
@@ -20,7 +25,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
-    padding-top: calc(var(--header-height) + var(--control-height)); /* Space for sticky header */
+    padding-top: 0; /* Will be set dynamically by JS */
 }
 
 /* Typography and Hierarchy */
@@ -41,6 +46,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     z-index: 1000;
     padding: 10px 0;
+    padding-top: max(10px, env(safe-area-inset-top, 10px));
 }
 
 .header-content {
@@ -140,6 +146,7 @@ body {
     max-width: 1000px;
     margin: 20px auto;
     padding: 0 15px;
+    padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
 }
 
 #checklist {
