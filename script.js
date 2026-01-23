@@ -11,6 +11,7 @@ const ITEM_LIST = [
 ];
 
 const STORAGE_KEY = 'checklistState';
+const QUANTITY_KEY = 'quantityNotes';
 const DATE_KEY = 'lastResetDate';
 const CHECKLIST_UL = document.getElementById('checklist');
 const SEARCH_INPUT = document.getElementById('search-input');
@@ -73,11 +74,21 @@ function checkDailyReset() {
 function loadState() {
     if (checkDailyReset()) {
         // Daily reset occurred, return an empty state (all unchecked)
+        // Note: quantity/notes are NOT cleared
         return {};
     }
     
     const savedState = localStorage.getItem(STORAGE_KEY);
     return savedState ? JSON.parse(savedState) : {};
+}
+
+/**
+ * Loads the quantity/notes from localStorage.
+ * @returns {Object} An object mapping item name to its quantity/notes text.
+ */
+function loadQuantityNotes() {
+    const savedQuantity = localStorage.getItem(QUANTITY_KEY);
+    return savedQuantity ? JSON.parse(savedQuantity) : {};
 }
 
 /**
@@ -95,6 +106,22 @@ function saveState() {
 }
 
 /**
+ * Saves the quantity/notes to localStorage.
+ */
+function saveQuantityNotes() {
+    const currentQuantity = {};
+    checklistItems.forEach(li => {
+        const checkbox = li.querySelector('input[type="checkbox"]');
+        const itemName = checkbox.dataset.itemName;
+        const quantityInput = li.querySelector('.quantity-input');
+        if (quantityInput && quantityInput.value) {
+            currentQuantity[itemName] = quantityInput.value;
+        }
+    });
+    localStorage.setItem(QUANTITY_KEY, JSON.stringify(currentQuantity));
+}
+
+/**
  * Updates the progress indicator text.
  */
 function updateProgress() {
@@ -108,6 +135,7 @@ function updateProgress() {
  */
 function renderChecklist() {
     const savedState = loadState();
+    const quantityNotes = loadQuantityNotes();
     CHECKLIST_UL.innerHTML = ''; // Clear existing list
     checklistItems = []; // Reset the array
 
@@ -131,13 +159,27 @@ function renderChecklist() {
         label.htmlFor = `item-${index}`;
         label.textContent = item;
 
+        // Create quantity/notes input
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'text';
+        quantityInput.className = 'quantity-input';
+        quantityInput.placeholder = 'จำนวน / หมายเหตุ';
+        quantityInput.dataset.itemName = item;
+        
+        // Apply saved quantity/notes
+        if (quantityNotes[item]) {
+            quantityInput.value = quantityNotes[item];
+        }
+
         li.appendChild(checkbox);
         li.appendChild(label);
+        li.appendChild(quantityInput);
         CHECKLIST_UL.appendChild(li);
         checklistItems.push(li);
 
-        // Add event listener for state change
+        // Add event listeners
         checkbox.addEventListener('change', saveState);
+        quantityInput.addEventListener('input', saveQuantityNotes);
     });
 
     updateProgress();
@@ -191,18 +233,24 @@ function showToast(message, duration = 2000) {
 
 /**
  * Copies all checked items to clipboard as a formatted list.
+ * Includes quantity/notes if present.
  */
 function copyCheckedItems() {
+    const quantityNotes = loadQuantityNotes();
     const checkedItems = checklistItems
         .filter(li => li.querySelector('input[type="checkbox"]').checked)
-        .map(li => li.querySelector('input[type="checkbox"]').dataset.itemName);
+        .map(li => {
+            const itemName = li.querySelector('input[type="checkbox"]').dataset.itemName;
+            const quantity = quantityNotes[itemName];
+            return quantity ? `- ${itemName} — ${quantity}` : `- ${itemName}`;
+        });
     
     if (checkedItems.length === 0) {
         showToast('ยังไม่ได้ติ๊กรายการ');
         return;
     }
     
-    const textToCopy = checkedItems.map(item => `- ${item}`).join('\n');
+    const textToCopy = checkedItems.join('\n');
     
     // Use Clipboard API
     navigator.clipboard.writeText(textToCopy).then(() => {
